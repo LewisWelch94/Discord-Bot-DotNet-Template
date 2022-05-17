@@ -52,7 +52,9 @@ namespace DiscordBot.Console
 
             if (_args[0] == "register")
             {
-                await new RestCommandUtils(_restCommandLogger, _config).RegisterCommands(_client);
+                await new RestCommandUtils(_restCommandLogger, _config).RegisterSlashCommands(_client);
+                await new RestCommandUtils(_restCommandLogger, _config).RegisterMessageCommands(_client);
+                await new RestCommandUtils(_restCommandLogger, _config).RegisterUserCommands(_client);
                 Environment.Exit(0);
                 return;
             }

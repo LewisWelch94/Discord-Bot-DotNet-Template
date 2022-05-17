@@ -4,7 +4,7 @@ using DiscordBot.Console.Interfaces;
 
 namespace DiscordBot.Console.SlashCommands
 {
-    public class PingSlashCommand : ISlashCommand
+    public class PingMessageCommand : ISlashCommand
     {
         public string Name() => "Ping";
         public string Description() => "Replies with Pong";
