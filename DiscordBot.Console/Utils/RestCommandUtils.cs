@@ -17,7 +17,6 @@ namespace DiscordBot.Console.Utils
             _config = config;
         }
 
-
         public async Task RegisterSlashCommands(DiscordSocketClient client)
         {
             var commands = new InterfaceUtils<ISlashCommand>().GetClasses().Where(x => x.IsActive);
@@ -84,7 +83,7 @@ namespace DiscordBot.Console.Utils
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Error Registering a Guild Command", ex);
+                    _logger.LogError("Error Registering a Message Command", ex);
                     throw;
                 }
             }
@@ -117,7 +116,7 @@ namespace DiscordBot.Console.Utils
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Error Registering a Guild Command", ex);
+                    _logger.LogError("Error Registering a User Command", ex);
                     throw;
                 }
             }

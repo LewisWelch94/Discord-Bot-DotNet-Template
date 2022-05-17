@@ -15,19 +15,19 @@ namespace DiscordBot.Console
         private readonly IConfiguration _config;
         private string[] _args;
 
-        public Bot(ILogger<Bot> botLogger, ILogger<RestCommandUtils> restCommandLogger, IConfiguration config)
+        public Bot(ILogger<Bot> botLogger, ILogger<RestCommandUtils> restCommandLogger, IConfiguration config, string[] args)
         {
             var discordConfig = new DiscordSocketConfig { MessageCacheSize = 100 };
             _client = new DiscordSocketClient(discordConfig);
             _botLogger = botLogger;
             _restCommandLogger = restCommandLogger;
             _config = config;
+            _args = args;
         }
 
-        public async Task Start(string[] args)
+        public async Task Start()
         {
             var token = _config["client:token"];
-            _args = args;
 
             await _client.LoginAsync(TokenType.Bot, token);
 
