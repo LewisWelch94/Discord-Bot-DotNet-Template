@@ -44,6 +44,7 @@ namespace DiscordBot.Console
             _client.SlashCommandExecuted += SlashCommandExecuted;
             _client.MessageCommandExecuted += MessageCommandExecuted;
             _client.UserCommandExecuted += UserCommandExecuted;
+            _client.ButtonExecuted += ButtonExecuted;
         }
 
         private async Task onReady()
@@ -81,6 +82,12 @@ namespace DiscordBot.Console
         private async Task UserCommandExecuted(SocketUserCommand cmd)
         {
             new UserCommandHandler(_client, cmd).Process();
+            await Task.CompletedTask;
+        }
+
+        private async Task ButtonExecuted(SocketMessageComponent btn)
+        {
+            new ButtonHandler(_client, btn).Process();
             await Task.CompletedTask;
         }
     }

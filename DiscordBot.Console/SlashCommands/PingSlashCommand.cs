@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using DiscordBot.Console.Buttons;
 using DiscordBot.Console.Interfaces;
+using DiscordBot.Console.Utils;
 
 namespace DiscordBot.Console.SlashCommands
 {
@@ -27,7 +29,7 @@ namespace DiscordBot.Console.SlashCommands
         public async Task Execute(DiscordSocketClient client, SocketSlashCommand command)
         {
             var userFromOption = command.Data.Options.Where(x => x.Name == "user").First().Value as IUser;
-            await command.RespondAsync($"Pong <@{userFromOption!.Id}>");
+            await command.RespondAsync($"Pong <@{userFromOption!.Id}>", components: ComponentUtils.GetComponentFromButtonCustomId("ping-button"));
             await Task.CompletedTask;
         }
     }
