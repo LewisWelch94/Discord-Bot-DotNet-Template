@@ -11,5 +11,12 @@ namespace DiscordBot.Console.Utils
             if (btn == null) throw new Exception($"Button was not found with the ID: {btnId}");
             return new ComponentBuilder().WithButton(btn.Component()).Build();
         }
+
+        public static MessageComponent GetComponentFromMenuCustomId(string menuId)
+        {
+            var menu = new InterfaceUtils<IMenu>().GetClasses().Where(x => x.IsActive && x.CustomId() == menuId).FirstOrDefault();
+            if (menu == null) throw new Exception($"Menu was not found with the ID: {menuId}");
+            return new ComponentBuilder().WithSelectMenu(menu.Component()).Build();
+        }
     }
 }

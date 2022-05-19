@@ -45,6 +45,7 @@ namespace DiscordBot.Console
             _client.MessageCommandExecuted += MessageCommandExecuted;
             _client.UserCommandExecuted += UserCommandExecuted;
             _client.ButtonExecuted += ButtonExecuted;
+            _client.SelectMenuExecuted += SelectMenuExecuted;
         }
 
         private async Task onReady()
@@ -63,31 +64,37 @@ namespace DiscordBot.Console
 
         private async Task MessageRecieved(SocketMessage msg)
         {
-            new MessageRecievedHandler(_client, msg).Process();
+            new MessageRecievedHandler(_client, msg).ProcessAsync();
             await Task.CompletedTask;
         }
 
         private async Task SlashCommandExecuted(SocketSlashCommand cmd)
         {
-            new SlashCommandHandler(_client, cmd).Process();
+            new SlashCommandHandler(_client, cmd).ProcessAsync();
             await Task.CompletedTask;
         }
 
         private async Task MessageCommandExecuted(SocketMessageCommand cmd)
         {
-            new MessageCommandHandler(_client, cmd).Process();
+            new MessageCommandHandler(_client, cmd).ProcessAsync();
             await Task.CompletedTask;
         }
 
         private async Task UserCommandExecuted(SocketUserCommand cmd)
         {
-            new UserCommandHandler(_client, cmd).Process();
+            new UserCommandHandler(_client, cmd).ProcessAsync();
             await Task.CompletedTask;
         }
 
         private async Task ButtonExecuted(SocketMessageComponent btn)
         {
-            new ButtonHandler(_client, btn).Process();
+            new ButtonHandler(_client, btn).ProcessAsync();
+            await Task.CompletedTask;
+        }
+
+        private async Task SelectMenuExecuted(SocketMessageComponent menu)
+        {
+            new SelectMenuHandler(_client, menu).ProcessAsync();
             await Task.CompletedTask;
         }
     }

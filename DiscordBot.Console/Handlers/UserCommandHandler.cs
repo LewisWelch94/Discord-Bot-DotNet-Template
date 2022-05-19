@@ -15,7 +15,7 @@ namespace DiscordBot.Console.Handlers
             _cmd = cmd;
         }
 
-        public async void Process()
+        public async void ProcessAsync()
         {
             var command = new InterfaceUtils<IUserCommand>().GetClasses().Where(x => x.Name() == _cmd.Data.Name && x.IsActive).FirstOrDefault();
 

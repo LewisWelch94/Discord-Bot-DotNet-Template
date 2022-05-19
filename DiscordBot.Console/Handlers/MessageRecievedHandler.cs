@@ -15,7 +15,7 @@ namespace DiscordBot.Console.Handlers
             _message = message;
         }
 
-        public async void Process()
+        public async void ProcessAsync()
         {
             if (_message == null) return;
             if (_message.Author.IsBot) return;

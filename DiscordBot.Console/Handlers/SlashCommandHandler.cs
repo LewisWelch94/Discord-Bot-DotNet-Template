@@ -1,11 +1,6 @@
 ﻿using Discord.WebSocket;
 using DiscordBot.Console.Interfaces;
 using DiscordBot.Console.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordBot.Console.Handlers
 {
@@ -20,7 +15,7 @@ namespace DiscordBot.Console.Handlers
             _cmd = cmd;
         }
 
-        public async void Process()
+        public async void ProcessAsync()
         {
             var command = new InterfaceUtils<ISlashCommand>().GetClasses().Where(x => x.Name().ToLower() == _cmd.Data.Name && x.IsActive).FirstOrDefault();
 
