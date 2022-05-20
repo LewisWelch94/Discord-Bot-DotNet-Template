@@ -19,11 +19,11 @@ namespace DiscordBot.Console.Utils
             return new ComponentBuilder().WithSelectMenu(menu.Component()).Build();
         }
 
-        public static ModalBuilder GetModalFromCustomId(string modalId)
+        public static Modal GetModalFromCustomId(string modalId)
         {
             var modal = new InterfaceUtils<IDiscordModal>().GetClasses().Where(x => x.IsActive && x.CustomId() == modalId).FirstOrDefault();
             if (modal == null) throw new Exception($"Menu was not found with the ID: {modalId}");
-            return modal.Component();
+            return modal.Component().Build();
         }
     }
 }
