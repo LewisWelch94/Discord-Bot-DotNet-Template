@@ -3,10 +3,10 @@ using Discord.WebSocket;
 
 namespace DiscordBot.Console.Interfaces
 {
-    public interface IButton : IBotAction
+    public interface IMenu : IBotAction
     {
         public string CustomId();
-        public ButtonBuilder Component();
+        public SelectMenuBuilder Component();
         Task Execute(DiscordSocketClient client, SocketMessageComponent cmd);
     }
 }
