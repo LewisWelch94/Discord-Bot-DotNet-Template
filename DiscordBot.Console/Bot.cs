@@ -46,6 +46,7 @@ namespace DiscordBot.Console
             _client.UserCommandExecuted += UserCommandExecuted;
             _client.ButtonExecuted += ButtonExecuted;
             _client.SelectMenuExecuted += SelectMenuExecuted;
+            _client.ModalSubmitted += ModalSubmitted;
         }
 
         private async Task onReady()
@@ -95,6 +96,12 @@ namespace DiscordBot.Console
         private async Task SelectMenuExecuted(SocketMessageComponent menu)
         {
             new SelectMenuHandler(_client, menu).ProcessAsync();
+            await Task.CompletedTask;
+        }
+
+        private async Task ModalSubmitted(SocketModal modal)
+        {
+            new ModalSubmittedHandler(_client, modal).ProcessAsync();
             await Task.CompletedTask;
         }
     }
