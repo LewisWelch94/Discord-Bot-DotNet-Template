@@ -17,7 +17,12 @@ namespace DiscordBot.Console
 
         public Bot(ILogger<Bot> botLogger, ILogger<RestCommandUtils> restCommandLogger, IConfiguration config, string[] args)
         {
-            var discordConfig = new DiscordSocketConfig { MessageCacheSize = 100 };
+            var discordConfig = new DiscordSocketConfig 
+            { 
+                AlwaysDownloadUsers = true,
+                MessageCacheSize = 100,
+            };
+
             _client = new DiscordSocketClient(discordConfig);
             _botLogger = botLogger;
             _restCommandLogger = restCommandLogger;
@@ -47,6 +52,8 @@ namespace DiscordBot.Console
             _client.ButtonExecuted += ButtonExecuted;
             _client.SelectMenuExecuted += SelectMenuExecuted;
             _client.ModalSubmitted += ModalSubmitted;
+            _client.ReactionAdded += (user, channel, reaction) => Reaction(user, channel, reaction, true);
+            _client.ReactionRemoved += (user, channel, reaction) => Reaction(user, channel, reaction, false);
         }
 
         private async Task onReady()
@@ -102,6 +109,12 @@ namespace DiscordBot.Console
         private async Task ModalSubmitted(SocketModal modal)
         {
             new ModalSubmittedHandler(_client, modal).ProcessAsync();
+            await Task.CompletedTask;
+        }
+
+        private async Task Reaction(Cacheable<IUserMessage, ulong> user, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction, bool isReaction)
+        {
+            new ReactionHandler(_client, user, channel, reaction, isReaction).ProcessAsync();
             await Task.CompletedTask;
         }
     }
