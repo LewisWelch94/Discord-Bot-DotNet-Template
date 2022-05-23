@@ -1,4 +1,9 @@
 ﻿using Discord;
+using DiscordBot.Console.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
+using System.Reflection;
 
 namespace DiscordBot.Console.Utils
 {
@@ -10,6 +15,23 @@ namespace DiscordBot.Console.Utils
 
             await msg.Channel.SendMessageAsync(replyMessage, messageReference: new MessageReference(msg.Id));
             await Task.CompletedTask;
+        }
+
+        public static Discord.Embed EmbedFromJson(string location)
+        {
+            JObject wholeMessage = JObject.Parse(File.ReadAllText("messages.json"));
+            if (wholeMessage == null) throw new ArgumentNullException(nameof(wholeMessage));
+
+            var message = wholeMessage.SelectToken(location)!.ToString();
+            var messageObj = JsonConvert.DeserializeObject<Models.Embed>(message);
+
+            if (messageObj!.Color != null)
+            {
+                var color = messageObj.Color.Replace("#", "0x");
+                messageObj.WithColor(new Color((uint)Convert.ToInt32(color, 16)));
+            }
+
+            return messageObj.Build();
         }
     }
 }

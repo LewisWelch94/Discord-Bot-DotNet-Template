@@ -29,9 +29,10 @@ namespace DiscordBot.Console.SlashCommands
         public async Task Execute(DiscordSocketClient client, SocketSlashCommand command)
         {
             var userFromOption = command.Data.Options.Where(x => x.Name == "user").First().Value as IUser;
+            //await command.RespondAsync(embed: MessageUtils.EmbedFromJson("ping"));
             //await command.RespondAsync($"Pong <@{userFromOption!.Id}>", components: ComponentUtils.GetComponentFromButtonCustomId("ping-button"));
             //await command.RespondAsync($"Pong <@{userFromOption!.Id}>", components: ComponentUtils.GetComponentFromMenuCustomId("ping-menu"));
-            await command.RespondWithModalAsync(ComponentUtils.GetModalFromCustomId("ping-modal"));
+            //await command.RespondWithModalAsync(ComponentUtils.GetModalFromCustomId("ping-modal"));
             await Task.CompletedTask;
         }
     }
