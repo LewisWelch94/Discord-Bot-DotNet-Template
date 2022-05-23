@@ -58,7 +58,7 @@ namespace DiscordBot.Console
 
         private async Task onReady()
         {
-            _botLogger.LogInformation("Bot has been connected");
+            _botLogger.LogInformation($"Bot login as: {_client.CurrentUser.Username}#{_client.CurrentUser.Discriminator}");
 
             if (_args[0] == "register")
             {

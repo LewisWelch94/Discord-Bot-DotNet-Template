@@ -31,10 +31,10 @@ namespace DiscordBot.Console.Handlers
                 return;
             }
 
-            IMessage msg = _msg.HasValue ? _msg.Value : await _msg.GetOrDownloadAsync();
+            IMessage msg = await _msg.GetOrDownloadAsync();
             if (!msg.Author.IsBot) return;
 
-            IChannel channel = _channel.HasValue ? _channel.Value : await _channel.GetOrDownloadAsync();
+            IChannel channel = await _channel.GetOrDownloadAsync();
 
             if (_isReaction)
             {
