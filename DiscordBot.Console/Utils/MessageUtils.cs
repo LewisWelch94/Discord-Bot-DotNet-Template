@@ -17,14 +17,22 @@ namespace DiscordBot.Console.Utils
             await Task.CompletedTask;
         }
 
-        public static Discord.Embed EmbedFromJson(string location)
+        public static Discord.Embed EmbedFromJson(string location, Dictionary<string, string>? variables = null)
         {
             JObject wholeMessage = JObject.Parse(File.ReadAllText("messages.json"));
             if (wholeMessage == null) throw new ArgumentNullException(nameof(wholeMessage));
 
             var message = wholeMessage.SelectToken(location)!.ToString();
-            var messageObj = JsonConvert.DeserializeObject<Models.Embed>(message);
 
+            if (variables != null)
+            {
+                foreach (var variable in variables)
+                {
+                    message = message.Replace(variable.Key, variable.Value);
+                }
+            }
+
+            var messageObj = JsonConvert.DeserializeObject<Models.Embed>(message);
             if (messageObj!.Color != null)
             {
                 var color = messageObj.Color.Replace("#", "0x");

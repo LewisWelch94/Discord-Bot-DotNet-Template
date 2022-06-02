@@ -32,10 +32,10 @@ Planning to upgrade to .NET 7.0
 - [x] Support Embed Messages with JSON
 - [x] Support HEX Color in Embed Messages
 - [x] Redesign README.md file
+- [x] String replace on Embed Messages using Dictionary
 - [ ] Support Global/local commands based on env 
-- [ ] Support API for Webhooks
-- [ ] Support Custom Rate Limit
 - [ ] Support Jobs using Cron
+- [ ] Support Custom Rate Limit
 - [ ] Support Sharding
 
 See the [open issues](https://github.com/oniknoor97/Discord-Bot-DotNet-Template/issues) for a full list of proposed features (and known issues).
@@ -51,6 +51,7 @@ Distributed under the commercial License. See `LICENSE` for more information.
 
 ## Acknowledgments
 
+* [Discord.Net](https://github.com/discord-net/Discord.Net)
 * [KevinNovak Typescript Template](https://github.com/KevinNovak/Discord-Bot-TypeScript-Template)
 * [Othneildrew README Template](https://github.com/othneildrew/Best-README-Template)
 
