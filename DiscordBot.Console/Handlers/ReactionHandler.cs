@@ -25,7 +25,7 @@ namespace DiscordBot.Console.Handlers
 
         public async void ProcessAsync()
         {
-            if (DiscordReactions == null) DiscordReactions = new InterfaceUtils<IDiscordReaction>().GetClasses()
+            if (DiscordReactions == null) DiscordReactions = new InterfaceUtils<IDiscordReaction>().GetClasses();
 
             var reaction = DiscordReactions.Where(x => x.IsActive & (x.Emojis().Contains(_reaction.Emote) || x.Emotes().Contains(_reaction.Emote))).FirstOrDefault();
 
