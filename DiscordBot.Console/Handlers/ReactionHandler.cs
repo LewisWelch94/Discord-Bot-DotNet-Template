@@ -12,6 +12,7 @@ namespace DiscordBot.Console.Handlers
         private readonly Cacheable<IMessageChannel, ulong> _channel;
         private readonly SocketReaction _reaction;
         private readonly bool _isReaction;
+        private IEnumerable<IDiscordReaction>? DiscordReactions { get; set; }
 
         public ReactionHandler(DiscordSocketClient client, Cacheable<IUserMessage, ulong> msg, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction, bool isReaction)
         {
@@ -24,7 +25,9 @@ namespace DiscordBot.Console.Handlers
 
         public async void ProcessAsync()
         {
-            var reaction = new InterfaceUtils<IDiscordReaction>().GetClasses().Where(x => x.IsActive & x.Emojis().Contains(_reaction.Emote)).FirstOrDefault();
+            if (DiscordReactions == null) DiscordReactions = new InterfaceUtils<IDiscordReaction>().GetClasses()
+
+            var reaction = DiscordReactions.Where(x => x.IsActive & (x.Emojis().Contains(_reaction.Emote) || x.Emotes().Contains(_reaction.Emote))).FirstOrDefault();
 
             if (reaction == null)
             {
