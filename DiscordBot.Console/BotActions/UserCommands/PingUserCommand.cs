@@ -1,7 +1,7 @@
 ﻿using Discord.WebSocket;
 using DiscordBot.Console.Interfaces;
 
-namespace DiscordBot.Console.UserCommands
+namespace DiscordBot.Console.BotActions.UserCommands
 {
     public class PingUserCommand : IUserCommand
     {
@@ -14,4 +14,3 @@ namespace DiscordBot.Console.UserCommands
         }
     }
 }
-    

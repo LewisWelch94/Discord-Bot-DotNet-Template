@@ -4,7 +4,7 @@ using DiscordBot.Console.Buttons;
 using DiscordBot.Console.Interfaces;
 using DiscordBot.Console.Utils;
 
-namespace DiscordBot.Console.SlashCommands
+namespace DiscordBot.Console.BotActions.SlashCommands
 {
     public class PingMessageCommand : ISlashCommand
     {

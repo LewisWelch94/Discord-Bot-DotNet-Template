@@ -1,8 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using DiscordBot.Console.Interfaces;
 
-namespace DiscordBot.Console.Triggers
+namespace DiscordBot.Console.Interfaces
 {
     public interface ITrigger : IBotAction
     {

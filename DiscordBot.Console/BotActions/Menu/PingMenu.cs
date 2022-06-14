@@ -2,7 +2,7 @@
 using Discord.WebSocket;
 using DiscordBot.Console.Interfaces;
 
-namespace DiscordBot.Console.Menu
+namespace DiscordBot.Console.BotActions.Menu
 {
     public class PingMenu : IMenu
     {

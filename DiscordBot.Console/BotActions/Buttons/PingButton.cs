@@ -2,7 +2,7 @@
 using Discord.WebSocket;
 using DiscordBot.Console.Interfaces;
 
-namespace DiscordBot.Console.Buttons
+namespace DiscordBot.Console.BotActions.Buttons
 {
     public class PingButton : IButton
     {

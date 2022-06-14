@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Console.Handlers
+﻿namespace DiscordBot.Console.Interfaces
 {
     public interface IDiscordHandler
     {

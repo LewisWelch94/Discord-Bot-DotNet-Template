@@ -1,7 +1,8 @@
 ﻿using Discord;
+using DiscordBot.Console.Interfaces;
 using DiscordBot.Console.Utils;
 
-namespace DiscordBot.Console.Triggers
+namespace DiscordBot.Console.BotActions.Triggers
 {
     public class PingTrigger : ITrigger
     {

@@ -2,7 +2,7 @@
 using Discord.WebSocket;
 using DiscordBot.Console.Interfaces;
 
-namespace DiscordBot.Console.Modals
+namespace DiscordBot.Console.BotActions.Modals
 {
     public class PingModal : IDiscordModal
     {

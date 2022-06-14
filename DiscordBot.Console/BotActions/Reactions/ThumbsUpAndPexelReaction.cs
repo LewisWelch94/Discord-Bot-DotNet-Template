@@ -3,7 +3,7 @@ using Discord.WebSocket;
 using DiscordBot.Console.Interfaces;
 using DiscordBot.Console.Utils;
 
-namespace DiscordBot.Console.Reactions
+namespace DiscordBot.Console.BotActions.Reactions
 {
     public class ThumbsUpAndPexelReaction : IDiscordReaction
     {
@@ -32,7 +32,7 @@ namespace DiscordBot.Console.Reactions
             else
             {
                 await MessageUtils.Reply(msg, "You have added a thumbs up emote!");
-            }  
+            }
         }
 
         public async Task ExecuteReactionRemoved(DiscordSocketClient client, IMessage msg, IChannel channel, SocketReaction reaction)

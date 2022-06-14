@@ -1,4 +1,4 @@
-﻿namespace DiscordBot.Console.Enums
+﻿namespace DiscordBot.Console.Constants
 {
     public static class RolesConstants
     {

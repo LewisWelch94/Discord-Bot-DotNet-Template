@@ -1,5 +1,5 @@
 ﻿using Discord.WebSocket;
-using DiscordBot.Console.Triggers;
+using DiscordBot.Console.Interfaces;
 using DiscordBot.Console.Utils;
 
 namespace DiscordBot.Console.Handlers
