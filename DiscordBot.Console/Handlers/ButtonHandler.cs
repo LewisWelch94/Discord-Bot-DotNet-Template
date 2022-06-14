@@ -8,6 +8,7 @@ namespace DiscordBot.Console.Handlers
     {
         private readonly DiscordSocketClient _client;
         private readonly SocketMessageComponent _cmd;
+        private IEnumerable<IButton>? Buttons { get; set; }
 
         public ButtonHandler(DiscordSocketClient client, SocketMessageComponent cmd)
         {
@@ -17,7 +18,9 @@ namespace DiscordBot.Console.Handlers
 
         public async void ProcessAsync()
         {
-            var button = new InterfaceUtils<IButton>().GetClasses().Where(x => x.IsActive && x.CustomId() == _cmd.Data.CustomId).FirstOrDefault();
+            if (Buttons == null) Buttons = new InterfaceUtils<IButton>().GetClasses();
+
+            var button = Buttons.Where(x => x.IsActive && x.CustomId() == _cmd.Data.CustomId).FirstOrDefault();
 
             if (button == null)
             {

@@ -8,6 +8,7 @@ namespace DiscordBot.Console.Handlers
     {
         private readonly DiscordSocketClient _client;
         private readonly SocketUserCommand _cmd;
+        private IEnumerable<IUserCommand>? UserCommands { get; set; }
 
         public UserCommandHandler(DiscordSocketClient client, SocketUserCommand cmd)
         {
@@ -17,7 +18,9 @@ namespace DiscordBot.Console.Handlers
 
         public async void ProcessAsync()
         {
-            var command = new InterfaceUtils<IUserCommand>().GetClasses().Where(x => x.Name() == _cmd.Data.Name && x.IsActive).FirstOrDefault();
+            if (UserCommands == null) UserCommands = new InterfaceUtils<IUserCommand>().GetClasses();
+
+            var command = UserCommands.Where(x => x.Name() == _cmd.Data.Name && x.IsActive).FirstOrDefault();
 
             if (command == null)
             {

@@ -8,6 +8,7 @@ namespace DiscordBot.Console.Handlers
     {
         private readonly DiscordSocketClient _client;
         private readonly SocketSlashCommand _cmd;
+        private IEnumerable<ISlashCommand>? SlashCommands { get; set; }
 
         public SlashCommandHandler(DiscordSocketClient client, SocketSlashCommand cmd)
         {
@@ -17,7 +18,9 @@ namespace DiscordBot.Console.Handlers
 
         public async void ProcessAsync()
         {
-            var command = new InterfaceUtils<ISlashCommand>().GetClasses().Where(x => x.Name().ToLower() == _cmd.Data.Name && x.IsActive).FirstOrDefault();
+            if (SlashCommands == null) SlashCommands = new InterfaceUtils<ISlashCommand>().GetClasses();
+
+            var command = SlashCommands.Where(x => x.Name().ToLower() == _cmd.Data.Name && x.IsActive).FirstOrDefault();
 
             if (command == null)
             {

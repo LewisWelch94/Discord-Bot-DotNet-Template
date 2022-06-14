@@ -8,6 +8,7 @@ namespace DiscordBot.Console.Handlers
     {
         private readonly DiscordSocketClient _client;
         private readonly SocketMessage _message;
+        private IEnumerable<ITrigger>? Triggers { get; set; }
 
         public MessageRecievedHandler(DiscordSocketClient client, SocketMessage message)
         {
@@ -20,7 +21,9 @@ namespace DiscordBot.Console.Handlers
             if (_message == null) return;
             if (_message.Author.IsBot) return;
 
-            var triggers = new InterfaceUtils<ITrigger>().GetClasses().Where(x => x.Triggered(_client, _message) && x.IsActive);
+            if (Triggers == null) Triggers = new InterfaceUtils<ITrigger>().GetClasses();
+
+            var triggers = Triggers.Where(x => x.Triggered(_client, _message) && x.IsActive);
 
             if (!triggers.Any()) return;
 

@@ -13,6 +13,7 @@ namespace DiscordBot.Console.Handlers
     {
         private readonly DiscordSocketClient _client;
         private readonly SocketModal _modal;
+        private IEnumerable<IDiscordModal>? DiscordModals { get; set; }
 
         public ModalSubmittedHandler(DiscordSocketClient client, SocketModal modal)
         {
@@ -22,7 +23,9 @@ namespace DiscordBot.Console.Handlers
 
         public async void ProcessAsync()
         {
-            var modal = new InterfaceUtils<IDiscordModal>().GetClasses().Where(x => x.IsActive && x.CustomId() == _modal.Data.CustomId).FirstOrDefault();
+            if (DiscordModals == null) DiscordModals = new InterfaceUtils<IDiscordModal>().GetClasses();
+
+            var modal = DiscordModals.Where(x => x.IsActive && x.CustomId() == _modal.Data.CustomId).FirstOrDefault();
 
             if (modal == null)
             {

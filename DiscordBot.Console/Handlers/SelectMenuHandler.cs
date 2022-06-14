@@ -8,6 +8,7 @@ namespace DiscordBot.Console.Handlers
     {
         private readonly DiscordSocketClient _client;
         private readonly SocketMessageComponent _cmd;
+        private IEnumerable<IMenu>? Menus { get; set; }
 
         public SelectMenuHandler(DiscordSocketClient client, SocketMessageComponent cmd)
         {
@@ -17,7 +18,9 @@ namespace DiscordBot.Console.Handlers
 
         public async void ProcessAsync()
         {
-            var button = new InterfaceUtils<IMenu>().GetClasses().Where(x => x.IsActive && x.CustomId() == _cmd.Data.CustomId).FirstOrDefault();
+            if (Menus == null) Menus = new InterfaceUtils<IMenu>().GetClasses();
+
+            var button = Menus.Where(x => x.IsActive && x.CustomId() == _cmd.Data.CustomId).FirstOrDefault();
 
             if (button == null)
             {
