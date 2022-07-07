@@ -19,11 +19,19 @@ namespace DiscordBot.Console.Handlers
         public async void ProcessAsync()
         {
             if (_message == null) return;
-            if (_message.Author.IsBot) return;
 
             if (Triggers == null) Triggers = new InterfaceUtils<ITrigger>().GetClasses();
 
-            var triggers = Triggers.Where(x => x.Triggered(_client, _message) && x.IsActive);
+            IEnumerable<ITrigger> triggers;
+
+            if (_message.Author.IsBot)
+            {
+                triggers = Triggers.Where(x => x.Triggered(_client, _message) && x.IsActive && x.AllowBot);
+            }
+            else
+            {
+                triggers = Triggers.Where(x => x.Triggered(_client, _message) && x.IsActive && !x.AllowBot);
+            }
 
             if (!triggers.Any()) return;
 
