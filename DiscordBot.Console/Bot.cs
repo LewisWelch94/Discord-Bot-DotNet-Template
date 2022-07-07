@@ -54,6 +54,8 @@ namespace DiscordBot.Console
             _client.ModalSubmitted += ModalSubmitted;
             _client.ReactionAdded += (user, channel, reaction) => Reaction(user, channel, reaction, true);
             _client.ReactionRemoved += (user, channel, reaction) => Reaction(user, channel, reaction, false);
+            _client.UserJoined += UserJoined;
+            _client.UserLeft += UserLeft;
         }
 
         private async Task onReady()
@@ -115,6 +117,18 @@ namespace DiscordBot.Console
         private async Task Reaction(Cacheable<IUserMessage, ulong> user, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction, bool isReaction)
         {
             new ReactionHandler(_client, user, channel, reaction, isReaction).ProcessAsync();
+            await Task.CompletedTask;
+        }
+
+        private async Task UserJoined(SocketGuildUser user)
+        {
+            new UserJoinedHandler(_client, user).ProcessAsync();
+            await Task.CompletedTask;
+        }
+
+        private async Task UserLeft(SocketGuild guild, SocketUser user)
+        {
+            new UserLeftHandler(_client, guild, user).ProcessAsync();
             await Task.CompletedTask;
         }
     }
