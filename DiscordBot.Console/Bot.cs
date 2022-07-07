@@ -21,6 +21,7 @@ namespace DiscordBot.Console
             { 
                 AlwaysDownloadUsers = true,
                 MessageCacheSize = 100,
+                GatewayIntents = GatewayIntents.All
             };
 
             _client = new DiscordSocketClient(discordConfig);
