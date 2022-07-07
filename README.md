@@ -33,8 +33,11 @@ Planning to upgrade to .NET 7.0
 - [x] Support HEX Color in Embed Messages
 - [x] Redesign README.md file
 - [x] String replace on Embed Messages using Dictionary
-- [ ] Support Global/local commands based on env 
+- [x] Supports Bot detection on Triggers
+- [x] Detect User Joining Guild
+- [x] Detect User Leaving Guild
 - [ ] Support Jobs using Cron
+- [ ] Support Global/local commands based on env 
 - [ ] Support Custom Rate Limit
 - [ ] Support Sharding
 
