@@ -36,7 +36,7 @@ Planning to upgrade to .NET 7.0
 - [x] Supports Bot detection on Triggers
 - [x] Detect User Joining Guild
 - [x] Detect User Leaving Guild
-- [ ] Support Jobs using Cron
+- [x] Support Jobs using Cron
 - [ ] Support Global/local commands based on env 
 - [ ] Support Custom Rate Limit
 - [ ] Support Sharding
@@ -56,6 +56,7 @@ Distributed under the commercial License. See `LICENSE` for more information.
 
 * [Discord.Net](https://github.com/discord-net/Discord.Net)
 * [KevinNovak Typescript Template](https://github.com/KevinNovak/Discord-Bot-TypeScript-Template)
+* [Cronos](https://github.com/HangfireIO/Cronos)
 * [Othneildrew README Template](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#top">back to top</a>)</p>

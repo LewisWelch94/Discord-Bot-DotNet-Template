@@ -71,6 +71,8 @@ namespace DiscordBot.Console
                 Environment.Exit(0);
                 return;
             }
+
+            await LoadJobs();
         }
 
         private async Task MessageRecieved(SocketMessage msg)
@@ -130,6 +132,12 @@ namespace DiscordBot.Console
         private async Task UserLeft(SocketGuild guild, SocketUser user)
         {
             new UserLeftHandler(_client, guild, user).ProcessAsync();
+            await Task.CompletedTask;
+        }
+
+        private async Task LoadJobs()
+        {
+            new JobHandler(_client).ProcessAsync();
             await Task.CompletedTask;
         }
     }
