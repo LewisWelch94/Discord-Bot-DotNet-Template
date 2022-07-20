@@ -16,7 +16,7 @@ namespace DiscordBot.Console.Handlers
             _cmd = cmd;
         }
 
-        public async void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (SlashCommands == null) SlashCommands = new InterfaceUtils<ISlashCommand>().GetClasses();
 
@@ -29,6 +29,7 @@ namespace DiscordBot.Console.Handlers
             }
 
             await command.Execute(_client, _cmd);
+            await Task.CompletedTask;
         }
     }
 }

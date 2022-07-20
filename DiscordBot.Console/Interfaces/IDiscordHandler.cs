@@ -2,6 +2,6 @@
 {
     public interface IDiscordHandler
     {
-        void ProcessAsync();
+        Task ProcessAsync();
     }
 }

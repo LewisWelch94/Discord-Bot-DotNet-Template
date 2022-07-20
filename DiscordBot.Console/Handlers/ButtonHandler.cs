@@ -16,7 +16,7 @@ namespace DiscordBot.Console.Handlers
             _cmd = cmd;
         }
 
-        public async void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (Buttons == null) Buttons = new InterfaceUtils<IButton>().GetClasses();
 
@@ -29,6 +29,7 @@ namespace DiscordBot.Console.Handlers
             }
 
             await button.Execute(_client, _cmd);
+            await Task.CompletedTask;
         }
     }
 }

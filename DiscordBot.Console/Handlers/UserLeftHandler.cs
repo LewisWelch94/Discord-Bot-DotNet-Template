@@ -19,13 +19,14 @@ namespace DiscordBot.Console.Handlers
             _user = user;
         }
 
-        public async void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (!IsActive) return;
 
             var userLogChannel = _guild.GetChannel(ChannelConstants.USER_LOG) as IMessageChannel;
             if (userLogChannel is null) return;
             await userLogChannel.SendMessageAsync($"{_user.Username}#{_user.Discriminator} has left the server! :(");
+            await Task.CompletedTask;
         }
     }
 }

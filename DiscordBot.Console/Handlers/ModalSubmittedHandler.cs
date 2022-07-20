@@ -21,7 +21,7 @@ namespace DiscordBot.Console.Handlers
             _modal = modal;
         }
 
-        public async void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (DiscordModals == null) DiscordModals = new InterfaceUtils<IDiscordModal>().GetClasses();
 
@@ -30,10 +30,12 @@ namespace DiscordBot.Console.Handlers
             if (modal == null)
             {
                 await _modal.RespondAsync("This modal has been deactivated", ephemeral: true);
+                await Task.CompletedTask;
                 return;
             }
 
             await modal.Execute(_client, _modal);
+            await Task.CompletedTask;
         }
     }
 }

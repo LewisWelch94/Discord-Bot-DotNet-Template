@@ -16,7 +16,7 @@ namespace DiscordBot.Console.Handlers
             _message = message;
         }
 
-        public async void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (_message == null) return;
 
@@ -39,6 +39,8 @@ namespace DiscordBot.Console.Handlers
             {
                 await trigger.Execute(_client, _message);
             }
+
+            await Task.CompletedTask;
         }
     }
 }

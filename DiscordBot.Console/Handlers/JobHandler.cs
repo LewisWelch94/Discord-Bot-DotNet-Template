@@ -15,7 +15,7 @@ namespace DiscordBot.Console.Handlers
             _client = client;
         }
 
-        public void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (DiscordJobs == null) DiscordJobs = new InterfaceUtils<IDiscordJob>().GetClasses();
 
@@ -33,6 +33,8 @@ namespace DiscordBot.Console.Handlers
 
                 timer.Start();
             }
+
+            await Task.CompletedTask;
         }
 
         private static double NextOccurrenceSeconds(string cron)

@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using DiscordBot.Console.Handlers;
+using DiscordBot.Console.Interfaces;
 using DiscordBot.Console.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,7 @@ namespace DiscordBot.Console
         private readonly IConfiguration _config;
         private string[] _args;
 
-        public Bot(ILogger<Bot> botLogger, ILogger<RestCommandUtils> restCommandLogger, IConfiguration config, string[] args)
+        public Bot(ILoggerFactory loggerFactory, IConfiguration config, string[] args)
         {
             var discordConfig = new DiscordSocketConfig 
             { 
@@ -25,8 +26,8 @@ namespace DiscordBot.Console
             };
 
             _client = new DiscordSocketClient(discordConfig);
-            _botLogger = botLogger;
-            _restCommandLogger = restCommandLogger;
+            _botLogger = loggerFactory.CreateLogger<Bot>(); ;
+            _restCommandLogger = loggerFactory.CreateLogger<RestCommandUtils>();
             _config = config;
             _args = args;
         }
@@ -37,14 +38,6 @@ namespace DiscordBot.Console
 
             await _client.LoginAsync(TokenType.Bot, token);
 
-            registerListeners();
-            await _client.StartAsync();
-
-            // Block this task until the program is closed.
-            await Task.Delay(-1);
-        }
-        private void registerListeners()
-        {
             _client.Ready += onReady;
             _client.MessageReceived += MessageRecieved;
             _client.SlashCommandExecuted += SlashCommandExecuted;
@@ -57,88 +50,52 @@ namespace DiscordBot.Console
             _client.ReactionRemoved += (user, channel, reaction) => Reaction(user, channel, reaction, false);
             _client.UserJoined += UserJoined;
             _client.UserLeft += UserLeft;
+
+            await _client.StartAsync();
+
+            // Block this task until the program is closed.
+            await Task.Delay(-1);
         }
 
         private async Task onReady()
         {
-            _botLogger.LogInformation($"Bot login as: {_client.CurrentUser.Username}#{_client.CurrentUser.Discriminator}");
+            var guild = _client.GetGuild(Convert.ToUInt64(_config["guild:id"]));
+            _botLogger.LogInformation($"Bot login as: {_client.CurrentUser.Username}#{_client.CurrentUser.Discriminator}\n" +
+                                      $"Fully configured to Guild: {guild.Name}");
 
-            if (_args[0] == "register")
+            switch (_args[0])
             {
-                await new RestCommandUtils(_restCommandLogger, _config).RegisterSlashCommands(_client);
-                await new RestCommandUtils(_restCommandLogger, _config).RegisterMessageCommands(_client);
-                await new RestCommandUtils(_restCommandLogger, _config).RegisterUserCommands(_client);
-                Environment.Exit(0);
-                return;
+                case "register":
+                    await new RestCommandUtils(_restCommandLogger, _config).RegisterSlashCommands(_client, guild);
+                    await new RestCommandUtils(_restCommandLogger, _config).RegisterMessageCommands(_client, guild);
+                    await new RestCommandUtils(_restCommandLogger, _config).RegisterUserCommands(_client, guild);
+                    Environment.Exit(0);
+                    return;
+
+                case "global":
+                    await new RestCommandUtils(_restCommandLogger, _config).RegisterSlashCommands(_client);
+                    await new RestCommandUtils(_restCommandLogger, _config).RegisterMessageCommands(_client);
+                    await new RestCommandUtils(_restCommandLogger, _config).RegisterUserCommands(_client);
+                    Environment.Exit(0);
+                    return;
+
+                default:
+                    await LoadJobs();
+                    break;
             }
-
-            await LoadJobs();
         }
 
-        private async Task MessageRecieved(SocketMessage msg)
-        {
-            new MessageRecievedHandler(_client, msg).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task SlashCommandExecuted(SocketSlashCommand cmd)
-        {
-            new SlashCommandHandler(_client, cmd).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task MessageCommandExecuted(SocketMessageCommand cmd)
-        {
-            new MessageCommandHandler(_client, cmd).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task UserCommandExecuted(SocketUserCommand cmd)
-        {
-            new UserCommandHandler(_client, cmd).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task ButtonExecuted(SocketMessageComponent btn)
-        {
-            new ButtonHandler(_client, btn).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task SelectMenuExecuted(SocketMessageComponent menu)
-        {
-            new SelectMenuHandler(_client, menu).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task ModalSubmitted(SocketModal modal)
-        {
-            new ModalSubmittedHandler(_client, modal).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
+        private async Task MessageRecieved(SocketMessage msg) => await new MessageRecievedHandler(_client, msg).ProcessAsync();
+        private async Task SlashCommandExecuted(SocketSlashCommand cmd) => await new SlashCommandHandler(_client, cmd).ProcessAsync();
+        private async Task MessageCommandExecuted(SocketMessageCommand cmd) => await new MessageCommandHandler(_client, cmd).ProcessAsync();
+        private async Task UserCommandExecuted(SocketUserCommand cmd) => await new UserCommandHandler(_client, cmd).ProcessAsync();
+        private async Task ButtonExecuted(SocketMessageComponent btn) => await new ButtonHandler(_client, btn).ProcessAsync();
+        private async Task SelectMenuExecuted(SocketMessageComponent menu) => await new SelectMenuHandler(_client, menu).ProcessAsync();
+        private async Task ModalSubmitted(SocketModal modal) => await new ModalSubmittedHandler(_client, modal).ProcessAsync();
+        private async Task UserJoined(SocketGuildUser user) => await new UserJoinedHandler(_client, user).ProcessAsync();
+        private async Task UserLeft(SocketGuild guild, SocketUser user) => await new UserLeftHandler(_client, guild, user).ProcessAsync();
+        private async Task LoadJobs() => await new JobHandler(_client).ProcessAsync();
         private async Task Reaction(Cacheable<IUserMessage, ulong> user, Cacheable<IMessageChannel, ulong> channel, SocketReaction reaction, bool isReaction)
-        {
-            new ReactionHandler(_client, user, channel, reaction, isReaction).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task UserJoined(SocketGuildUser user)
-        {
-            new UserJoinedHandler(_client, user).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task UserLeft(SocketGuild guild, SocketUser user)
-        {
-            new UserLeftHandler(_client, guild, user).ProcessAsync();
-            await Task.CompletedTask;
-        }
-
-        private async Task LoadJobs()
-        {
-            new JobHandler(_client).ProcessAsync();
-            await Task.CompletedTask;
-        }
+            => await new ReactionHandler(_client, user, channel, reaction, isReaction).ProcessAsync();
     }
 }

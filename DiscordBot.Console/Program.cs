@@ -25,9 +25,7 @@ public class Program
 
             }).Build();
 
-        var botLogger = loggerFactory.CreateLogger<Bot>();
-        var restCommandLogger = loggerFactory.CreateLogger<RestCommandUtils>();
         config = builder.Build();
-        await new Bot(botLogger, restCommandLogger, config, args).Start();
+        await new Bot(loggerFactory, config, args).Start();
     }
 }

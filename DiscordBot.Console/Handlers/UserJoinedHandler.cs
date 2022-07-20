@@ -17,13 +17,14 @@ namespace DiscordBot.Console.Handlers
             _user = user;
         }
 
-        public async void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (!IsActive) return;
 
             var userLogChannel = await _client.GetChannelAsync(ChannelConstants.USER_LOG) as IMessageChannel;
             if (userLogChannel is null) return;
             await userLogChannel.SendMessageAsync($"{_user.Username}#{_user.Discriminator} has joined the server!");
+            await Task.CompletedTask;
         }
     }
 }

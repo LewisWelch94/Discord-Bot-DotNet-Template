@@ -23,7 +23,7 @@ namespace DiscordBot.Console.Handlers
             _isReaction = isReaction;
         }
 
-        public async void ProcessAsync()
+        public async Task ProcessAsync()
         {
             if (DiscordReactions == null) DiscordReactions = new InterfaceUtils<IDiscordReaction>().GetClasses();
 
