@@ -37,7 +37,7 @@ Planning to upgrade to .NET 7.0
 - [x] Detect User Joining Guild
 - [x] Detect User Leaving Guild
 - [x] Support Jobs using Cron
-- [ ] Support Global/local commands based on env 
+- [x] Support Global/local commands
 - [ ] Support Custom Rate Limit
 - [ ] Support Sharding
 

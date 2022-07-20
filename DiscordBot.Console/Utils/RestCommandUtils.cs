@@ -17,7 +17,7 @@ namespace DiscordBot.Console.Utils
             _config = config;
         }
 
-        public async Task RegisterSlashCommands(DiscordSocketClient client)
+        public async Task RegisterSlashCommands(DiscordSocketClient client, SocketGuild? guild = null)
         {
             var commands = new InterfaceUtils<ISlashCommand>().GetClasses().Where(x => x.IsActive);
 
@@ -29,7 +29,12 @@ namespace DiscordBot.Console.Utils
             }
 
             _logger.LogInformation("Clearing all commands");
-            await client.Guilds.First(x => x.Id == Convert.ToUInt64(_config["guild:id"])).DeleteApplicationCommandsAsync();
+
+            if (guild != null)
+            {
+                await guild.DeleteApplicationCommandsAsync();
+            }
+
             await client.Rest.DeleteAllGlobalCommandsAsync();
 
             foreach(var command in commands)
@@ -38,15 +43,23 @@ namespace DiscordBot.Console.Utils
                 {
                     Name = command.Name().ToLower(),
                     Description = command.Description(),
-                    IsDMEnabled = command.IsDMEnabled(),
-                    IsDefaultPermission = command.isDefaultPermission(),
+                    IsDMEnabled = command.IsDMEnabled,
+                    IsDefaultPermission = command.IsDefaultPermission,
                     Options = command.Options(),
                 };
 
                 try
                 {
-                    await client.Rest.CreateGuildCommand(guildCommand.Build(), Convert.ToUInt64(_config["guild:id"]));
-                    _logger.LogInformation($"Slash Command Name: {command.Name()} registered");
+                    if (guild != null)
+                    {
+                        await client.Rest.CreateGuildCommand(guildCommand.Build(), guild.Id);
+                        _logger.LogInformation($"Slash Command Name locally: {command.Name()} registered");
+                    }
+                    else
+                    {
+                        await client.Rest.CreateGlobalCommand(guildCommand.Build());
+                        _logger.LogInformation($"Slash Command Name globally: {command.Name()} registered");
+                    }   
                 }
                 catch (Exception ex)
                 {
@@ -58,7 +71,7 @@ namespace DiscordBot.Console.Utils
             await Task.CompletedTask;
         }
 
-        public async Task RegisterMessageCommands(DiscordSocketClient client)
+        public async Task RegisterMessageCommands(DiscordSocketClient client, SocketGuild? guild = null)
         {
             var commands = new InterfaceUtils<IMessageCommand>().GetClasses().Where(x => x.IsActive);
 
@@ -78,8 +91,16 @@ namespace DiscordBot.Console.Utils
 
                 try
                 {
-                    await client.Rest.CreateGuildCommand(messageCommand.Build(), Convert.ToUInt64(_config["guild:id"]));
-                    _logger.LogInformation($"Message Command Name: {command.Name()} registered");
+                    if (guild != null)
+                    {
+                        await client.Rest.CreateGuildCommand(messageCommand.Build(), guild.Id);
+                        _logger.LogInformation($"Message Command Name locally: {command.Name()} registered");
+                    }
+                    else
+                    {
+                        await client.Rest.CreateGlobalCommand(messageCommand.Build());
+                        _logger.LogInformation($"Message Command Name globally: {command.Name()} registered");
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -91,7 +112,7 @@ namespace DiscordBot.Console.Utils
             await Task.CompletedTask;
         }
 
-        public async Task RegisterUserCommands(DiscordSocketClient client)
+        public async Task RegisterUserCommands(DiscordSocketClient client, SocketGuild? guild = null)
         {
             var commands = new InterfaceUtils<IUserCommand>().GetClasses().Where(x => x.IsActive);
 
@@ -104,15 +125,23 @@ namespace DiscordBot.Console.Utils
 
             foreach (var command in commands)
             {
-                var messageCommand = new UserCommandBuilder
+                var userCommand = new UserCommandBuilder
                 {
                     Name = command.Name()
                 };
 
                 try
                 {
-                    await client.Rest.CreateGuildCommand(messageCommand.Build(), Convert.ToUInt64(_config["guild:id"]));
-                    _logger.LogInformation($"User Command Name: {command.Name()} registered");
+                    if (guild != null)
+                    {
+                        await client.Rest.CreateGuildCommand(userCommand.Build(), guild.Id);
+                        _logger.LogInformation($"User Command Name locally: {command.Name()} registered");
+                    }
+                    else
+                    {
+                        await client.Rest.CreateGlobalCommand(userCommand.Build());
+                        _logger.LogInformation($"User Command Name globally: {command.Name()} registered");
+                    }
                 }
                 catch (Exception ex)
                 {
