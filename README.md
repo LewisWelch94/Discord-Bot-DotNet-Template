@@ -38,6 +38,8 @@ Planning to upgrade to .NET 7.0
 - [x] Detect User Leaving Guild
 - [x] Support Jobs using Cron
 - [x] Support Global/local commands
+- [x] Use DI to make Client available everywhere
+- [x] Run Web and Bot together
 - [ ] Support Custom Rate Limit
 - [ ] Support Sharding
 

@@ -1,31 +1,33 @@
-﻿using DiscordBot.Console.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
-namespace DiscordBot.Console; 
-
-public class Program
+﻿namespace DiscordBot.Console
 {
-    public static ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddFilter("System", LogLevel.Debug).AddConsole());
-    public IConfiguration? config { get; set; }
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
 
-    static void Main(string[] args) => new Program().MainAsync(args).GetAwaiter().GetResult();
-
-    public async Task MainAsync(string[] args)
+    public class Program
     {
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json");
+        public static ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddFilter("System", LogLevel.Debug).AddConsole());
+        public IConfiguration? config { get; set; }
 
-        using IHost host = Host.CreateDefaultBuilder(args)
-            .ConfigureServices((_, services) =>
-            {
-                Services.ConfigureServices(services);
+        static void Main(string[] args) => new Program().MainAsync(args).GetAwaiter().GetResult();
 
-            }).Build();
+        public async Task MainAsync(string[] args)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json");
 
-        config = builder.Build();
-        await new Bot(loggerFactory, config, args).Start();
+            config = builder.Build();
+
+            using IHost host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((_, services) =>
+                {
+                    Services.ConfigureServices(services, config);
+                }).Build();
+
+            var bot = host.Services.GetRequiredService<Bot>();
+            await bot.Start(args);
+        }
     }
 }

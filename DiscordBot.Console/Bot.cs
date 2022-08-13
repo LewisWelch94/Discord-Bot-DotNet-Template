@@ -1,41 +1,33 @@
-﻿using Discord;
-using Discord.WebSocket;
-using DiscordBot.Console.Handlers;
-using DiscordBot.Console.Interfaces;
-using DiscordBot.Console.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
-namespace DiscordBot.Console
+﻿namespace DiscordBot.Console
 {
+    using Discord;
+    using Discord.WebSocket;
+    using DiscordBot.Console.Handlers;
+    using DiscordBot.Console.Utils;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+
     public class Bot
     {
         private DiscordSocketClient _client;
         private readonly ILogger<Bot> _botLogger;
         private readonly ILogger<RestCommandUtils> _restCommandLogger;
         private readonly IConfiguration _config;
-        private string[] _args;
+        private string[]? _args;
 
-        public Bot(ILoggerFactory loggerFactory, IConfiguration config, string[] args)
+        public Bot(DiscordSocketClient client, IConfiguration config, ILogger<Bot> botLogger, ILogger<RestCommandUtils> restCommandLogger)
         {
-            var discordConfig = new DiscordSocketConfig 
-            { 
-                AlwaysDownloadUsers = true,
-                MessageCacheSize = 100,
-                GatewayIntents = GatewayIntents.All
-            };
-
-            _client = new DiscordSocketClient(discordConfig);
-            _botLogger = loggerFactory.CreateLogger<Bot>(); ;
-            _restCommandLogger = loggerFactory.CreateLogger<RestCommandUtils>();
+            _client = client;
             _config = config;
-            _args = args;
+            _botLogger = botLogger;
+            _restCommandLogger = restCommandLogger;
         }
 
-        public async Task Start()
+        public async Task Start(string[] args)
         {
-            var token = _config["client:token"];
+            _args = args;
 
+            var token = _config["client:token"];
             await _client.LoginAsync(TokenType.Bot, token);
 
             _client.Ready += onReady;
@@ -63,7 +55,7 @@ namespace DiscordBot.Console
             _botLogger.LogInformation($"Bot login as: {_client.CurrentUser.Username}#{_client.CurrentUser.Discriminator}\n" +
                                       $"Fully configured to Guild: {guild.Name}");
 
-            switch (_args[0])
+            switch (_args![0])
             {
                 case "register":
                     await new RestCommandUtils(_restCommandLogger, _config).RegisterSlashCommands(_client, guild);
@@ -85,7 +77,7 @@ namespace DiscordBot.Console
             }
         }
 
-        private async Task MessageRecieved(SocketMessage msg) => await new MessageRecievedHandler(_client, msg).ProcessAsync();
+        private async Task MessageRecieved(SocketMessage msg) => await new MessageRecievedHandler(msg).ProcessAsync();
         private async Task SlashCommandExecuted(SocketSlashCommand cmd) => await new SlashCommandHandler(_client, cmd).ProcessAsync();
         private async Task MessageCommandExecuted(SocketMessageCommand cmd) => await new MessageCommandHandler(_client, cmd).ProcessAsync();
         private async Task UserCommandExecuted(SocketUserCommand cmd) => await new UserCommandHandler(_client, cmd).ProcessAsync();

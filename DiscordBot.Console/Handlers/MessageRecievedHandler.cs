@@ -6,38 +6,35 @@ namespace DiscordBot.Console.Handlers
 {
     public class MessageRecievedHandler : IDiscordHandler
     {
-        private readonly DiscordSocketClient _client;
-        private readonly SocketMessage _message;
+        private readonly SocketMessage socketMessage;
         private IEnumerable<ITrigger>? Triggers { get; set; }
 
-        public MessageRecievedHandler(DiscordSocketClient client, SocketMessage message)
+        public MessageRecievedHandler(SocketMessage message)
         {
-            _client = client;
-            _message = message;
+            socketMessage = message;
         }
 
         public async Task ProcessAsync()
         {
-            if (_message == null) return;
-
+            if (socketMessage == null) return;
             if (Triggers == null) Triggers = new InterfaceUtils<ITrigger>().GetClasses();
 
             IEnumerable<ITrigger> triggers;
 
-            if (_message.Author.IsBot)
+            if (socketMessage.Author.IsBot)
             {
-                triggers = Triggers.Where(x => x.Triggered(_client, _message) && x.IsActive && x.AllowBot);
+                triggers = Triggers.Where(x => x.AllowBot && x.Triggered(socketMessage) && x.IsActive);
             }
             else
             {
-                triggers = Triggers.Where(x => x.Triggered(_client, _message) && x.IsActive && !x.AllowBot);
+                triggers = Triggers.Where(x => !x.AllowBot && x.Triggered(socketMessage) && x.IsActive);
             }
 
             if (!triggers.Any()) return;
 
             foreach(var trigger in triggers)
             {
-                await trigger.Execute(_client, _message);
+                await trigger.Execute(socketMessage);
             }
 
             await Task.CompletedTask;

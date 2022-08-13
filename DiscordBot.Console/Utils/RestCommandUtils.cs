@@ -1,11 +1,11 @@
-﻿using Discord;
-using Discord.WebSocket;
-using DiscordBot.Console.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
-namespace DiscordBot.Console.Utils
+﻿namespace DiscordBot.Console.Utils
 {
+    using Discord;
+    using Discord.WebSocket;
+    using DiscordBot.Console.Interfaces;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+
     public class RestCommandUtils
     {
         private readonly ILogger<RestCommandUtils> _logger;

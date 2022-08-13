@@ -401,3 +401,8 @@ FodyWeavers.xsd
 
 # Ignoring appsettings
 DiscordBot.Console/appsettings.json
+DiscordBot.Web/appsettings.json
+DiscordBot.Web/appsettings.Development.json
+
+# Clear Web files
+DiscordBot.Web/wwwroot/lib/*

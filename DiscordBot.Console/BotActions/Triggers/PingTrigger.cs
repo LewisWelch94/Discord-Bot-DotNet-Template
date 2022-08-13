@@ -6,16 +6,13 @@ namespace DiscordBot.Console.BotActions.Triggers
 {
     public class PingTrigger : ITrigger
     {
-        public bool Triggered(IDiscordClient client, IMessage msg)
+        public bool Triggered(IMessage msg)
         {
-            if (msg.Content == "ping")
-            {
-                return true;
-            }
-            return false;
+            if (msg.Content != "ping") return false;
+            return true;
         }
 
-        public async Task Execute(IDiscordClient client, IMessage msg)
+        public async Task Execute(IMessage msg)
         {
             await MessageUtils.Reply(msg, "Pong ;)");
             await Task.CompletedTask;
